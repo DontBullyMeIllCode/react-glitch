@@ -1,0 +1,309 @@
+/*
+ * Shared defaults for every variant. These have to live somewhere both of them
+ * see: a variant that sets only its own overrides would leave var(--glitch-loop)
+ * undefined, which invalidates the whole `animation` shorthand and silently
+ * drops the effect rather than erroring.
+ */
+.glitch-text,
+.glitch-icon {
+  --glitch-loop: 5.2s;
+  /* Furthest a torn slice slides sideways (shader: 0.06 UV). */
+  --glitch-amount: 6%;
+  /* Constant channel separation (shader: 0.018 UV). */
+  --glitch-split: 0.018em;
+  /* Shifts the schedule so neighbouring elements do not tear in unison. */
+  --glitch-offset: 0s;
+  --glitch-a: #22e6ff;
+  --glitch-b: #ff3ddb;
+}
+
+.glitch-text {
+  position: relative;
+  display: inline-block;
+  animation: glitch-base var(--glitch-loop) steps(1, end) infinite;
+  animation-delay: var(--glitch-offset);
+}
+
+.glitch-text::before,
+.glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  width: 100%;
+  pointer-events: none;
+  user-select: none;
+  /* Hidden until a burst clips them back into view. */
+  clip-path: inset(100% 0 0 0);
+}
+
+.glitch-text::before {
+  left: calc(var(--glitch-split) * -1);
+  color: var(--glitch-a);
+  animation: glitch-channel-a var(--glitch-loop) steps(1, end) infinite;
+  animation-delay: var(--glitch-offset);
+}
+
+.glitch-text::after {
+  left: var(--glitch-split);
+  color: var(--glitch-b);
+  animation: glitch-channel-b var(--glitch-loop) steps(1, end) infinite;
+  animation-delay: var(--glitch-offset);
+}
+
+/* Cyan channel: slices torn one way. */
+@keyframes glitch-channel-a {
+  0%, 5.9% { clip-path: inset(100% 0 0 0); transform: translate3d(0, 0, 0); }
+  6.0%     { clip-path: inset(14% 0 68% 0); transform: translate3d(calc(var(--glitch-amount) * -1), 0, 0); }
+  7.1%     { clip-path: inset(46% 0 34% 0); transform: translate3d(var(--glitch-amount), 0, 0); }
+  8.2%     { clip-path: inset(72% 0 12% 0); transform: translate3d(calc(var(--glitch-amount) * -0.55), 0, 0); }
+
+  9.3%, 26.9% { clip-path: inset(100% 0 0 0); transform: translate3d(0, 0, 0); }
+  27.0%    { clip-path: inset(30% 0 52% 0); transform: translate3d(calc(var(--glitch-amount) * 0.8), 0, 0); }
+  28.1%    { clip-path: inset(8% 0 74% 0);  transform: translate3d(calc(var(--glitch-amount) * -0.9), 0, 0); }
+  29.2%    { clip-path: inset(58% 0 26% 0); transform: translate3d(calc(var(--glitch-amount) * 0.45), 0, 0); }
+
+  30.3%, 51.9% { clip-path: inset(100% 0 0 0); transform: translate3d(0, 0, 0); }
+  52.0%    { clip-path: inset(60% 0 24% 0); transform: translate3d(calc(var(--glitch-amount) * -0.7), 0, 0); }
+  53.1%    { clip-path: inset(22% 0 60% 0); transform: translate3d(var(--glitch-amount), 0, 0); }
+  54.2%    { clip-path: inset(40% 0 44% 0); transform: translate3d(calc(var(--glitch-amount) * -0.35), 0, 0); }
+
+  55.3%, 82.9% { clip-path: inset(100% 0 0 0); transform: translate3d(0, 0, 0); }
+  83.0%    { clip-path: inset(8% 0 78% 0);  transform: translate3d(calc(var(--glitch-amount) * 0.95), 0, 0); }
+  84.1%    { clip-path: inset(52% 0 30% 0); transform: translate3d(calc(var(--glitch-amount) * -0.6), 0, 0); }
+  85.2%    { clip-path: inset(76% 0 10% 0); transform: translate3d(calc(var(--glitch-amount) * 0.4), 0, 0); }
+
+  86.3%, 100% { clip-path: inset(100% 0 0 0); transform: translate3d(0, 0, 0); }
+}
+
+/* Magenta channel: different slices, torn the other way. */
+@keyframes glitch-channel-b {
+  0%, 5.9% { clip-path: inset(100% 0 0 0); transform: translate3d(0, 0, 0); }
+  6.0%     { clip-path: inset(28% 0 54% 0); transform: translate3d(calc(var(--glitch-amount) * 0.85), 0, 0); }
+  7.1%     { clip-path: inset(62% 0 22% 0); transform: translate3d(calc(var(--glitch-amount) * -1), 0, 0); }
+  8.2%     { clip-path: inset(10% 0 76% 0); transform: translate3d(calc(var(--glitch-amount) * 0.5), 0, 0); }
+
+  9.3%, 26.9% { clip-path: inset(100% 0 0 0); transform: translate3d(0, 0, 0); }
+  27.0%    { clip-path: inset(54% 0 28% 0); transform: translate3d(calc(var(--glitch-amount) * -0.75), 0, 0); }
+  28.1%    { clip-path: inset(26% 0 58% 0); transform: translate3d(calc(var(--glitch-amount) * 0.9), 0, 0); }
+  29.2%    { clip-path: inset(74% 0 14% 0); transform: translate3d(calc(var(--glitch-amount) * -0.4), 0, 0); }
+
+  30.3%, 51.9% { clip-path: inset(100% 0 0 0); transform: translate3d(0, 0, 0); }
+  52.0%    { clip-path: inset(16% 0 66% 0); transform: translate3d(calc(var(--glitch-amount) * 0.65), 0, 0); }
+  53.1%    { clip-path: inset(48% 0 36% 0); transform: translate3d(calc(var(--glitch-amount) * -0.95), 0, 0); }
+  54.2%    { clip-path: inset(70% 0 16% 0); transform: translate3d(calc(var(--glitch-amount) * 0.3), 0, 0); }
+
+  55.3%, 82.9% { clip-path: inset(100% 0 0 0); transform: translate3d(0, 0, 0); }
+  83.0%    { clip-path: inset(38% 0 46% 0); transform: translate3d(calc(var(--glitch-amount) * -0.9), 0, 0); }
+  84.1%    { clip-path: inset(12% 0 72% 0); transform: translate3d(calc(var(--glitch-amount) * 0.55), 0, 0); }
+  85.2%    { clip-path: inset(60% 0 24% 0); transform: translate3d(calc(var(--glitch-amount) * -0.45), 0, 0); }
+
+  86.3%, 100% { clip-path: inset(100% 0 0 0); transform: translate3d(0, 0, 0); }
+}
+
+/*
+ * The base copy. Jitters a little, and a mask with hard stops punches whole
+ * bands out of it — the equivalent of the shader dropping slices altogether.
+ * A plain inset() clip cannot cut a hole in the middle, hence the mask.
+ */
+@keyframes glitch-base {
+  0%, 5.9% { transform: translate3d(0, 0, 0); -webkit-mask-image: none; mask-image: none; }
+  6.0%  { transform: translate3d(0.8%, 0, 0);
+          -webkit-mask-image: linear-gradient(to bottom, #000 0 40%, transparent 40% 47%, #000 47% 100%);
+          mask-image: linear-gradient(to bottom, #000 0 40%, transparent 40% 47%, #000 47% 100%); }
+  7.1%  { transform: translate3d(-0.5%, 0, 0);
+          -webkit-mask-image: linear-gradient(to bottom, #000 0 68%, transparent 68% 73%, #000 73% 100%);
+          mask-image: linear-gradient(to bottom, #000 0 68%, transparent 68% 73%, #000 73% 100%); }
+  8.2%  { transform: translate3d(0.3%, 0, 0); -webkit-mask-image: none; mask-image: none; }
+
+  9.3%, 26.9% { transform: translate3d(0, 0, 0); -webkit-mask-image: none; mask-image: none; }
+  27.0% { transform: translate3d(-0.6%, 0, 0); -webkit-mask-image: none; mask-image: none; }
+  28.1% { transform: translate3d(0.7%, 0, 0);
+          -webkit-mask-image: linear-gradient(to bottom, #000 0 20%, transparent 20% 26%, #000 26% 100%);
+          mask-image: linear-gradient(to bottom, #000 0 20%, transparent 20% 26%, #000 26% 100%); }
+  29.2% { transform: translate3d(-0.2%, 0, 0); -webkit-mask-image: none; mask-image: none; }
+
+  30.3%, 51.9% { transform: translate3d(0, 0, 0); -webkit-mask-image: none; mask-image: none; }
+  52.0% { transform: translate3d(-0.8%, 0, 0);
+          -webkit-mask-image: linear-gradient(to bottom, #000 0 55%, transparent 55% 61%, #000 61% 100%);
+          mask-image: linear-gradient(to bottom, #000 0 55%, transparent 55% 61%, #000 61% 100%); }
+  53.1% { transform: translate3d(0.5%, 0, 0); -webkit-mask-image: none; mask-image: none; }
+  54.2% { transform: translate3d(-0.3%, 0, 0);
+          -webkit-mask-image: linear-gradient(to bottom, #000 0 30%, transparent 30% 35%, #000 35% 100%);
+          mask-image: linear-gradient(to bottom, #000 0 30%, transparent 30% 35%, #000 35% 100%); }
+
+  55.3%, 82.9% { transform: translate3d(0, 0, 0); -webkit-mask-image: none; mask-image: none; }
+  83.0% { transform: translate3d(0.6%, 0, 0); -webkit-mask-image: none; mask-image: none; }
+  84.1% { transform: translate3d(-0.7%, 0, 0);
+          -webkit-mask-image: linear-gradient(to bottom, #000 0 62%, transparent 62% 68%, #000 68% 100%);
+          mask-image: linear-gradient(to bottom, #000 0 62%, transparent 62% 68%, #000 68% 100%); }
+  85.2% { transform: translate3d(0.25%, 0, 0); -webkit-mask-image: none; mask-image: none; }
+
+  86.3%, 100% { transform: translate3d(0, 0, 0); -webkit-mask-image: none; mask-image: none; }
+}
+
+/* Flashing imagery is exactly what this is, so honour the OS-level opt-out. */
+@media (prefers-reduced-motion: reduce) {
+  .glitch-text {
+    animation: none;
+  }
+  .glitch-text::before,
+  .glitch-text::after {
+    display: none;
+  }
+}
+
+/*
+ * ---------------------------------------------------------------------------
+ * Icons and other static markup
+ *
+ * Text builds its channels from attr(data-text); an SVG has none, so here the
+ * children are cloned into real layers instead. That is only safe because the
+ * content is static — cloning something animated would run it three times.
+ * ---------------------------------------------------------------------------
+ */
+
+.glitch-icon {
+  /*
+   * A percentage rather than the text default's em: an icon's box has no
+   * meaningful relationship to font-size, so em separation would vanish on a
+   * large icon and overwhelm a small one.
+   */
+  --glitch-split: 0.7%;
+
+  position: relative;
+  display: inline-block;
+}
+
+.glitch-icon__base {
+  display: block;
+  animation: glitch-base var(--glitch-loop) steps(1, end) infinite;
+  animation-delay: var(--glitch-offset);
+}
+
+.glitch-icon__channel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  clip-path: inset(100% 0 0 0);
+  animation-duration: var(--glitch-loop);
+  animation-timing-function: steps(1, end);
+  animation-iteration-count: infinite;
+  animation-delay: var(--glitch-offset);
+}
+
+.glitch-icon__channel--a {
+  left: calc(var(--glitch-split) * -1);
+  animation-name: glitch-channel-a;
+}
+
+.glitch-icon__channel--b {
+  left: var(--glitch-split);
+  animation-name: glitch-channel-b;
+}
+
+/*
+ * lucide strokes with currentColor, so recolouring the layer is enough. The
+ * descendant selector is needed because the icon usually carries its own text-*
+ * utility, which would otherwise win; these rules sit outside Tailwind's
+ * layers, so they take priority over layered utilities regardless.
+ */
+.glitch-icon__channel--a,
+.glitch-icon__channel--a * {
+  color: var(--glitch-a);
+}
+
+.glitch-icon__channel--b,
+.glitch-icon__channel--b * {
+  color: var(--glitch-b);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glitch-icon__base {
+    animation: none;
+  }
+  .glitch-icon__channel {
+    display: none;
+  }
+}
+
+/*
+ * ---------------------------------------------------------------------------
+ * Images and other bitmaps
+ *
+ * The icon variant tints a layer with `color`, which only works because lucide
+ * strokes with currentColor. A bitmap ignores `color` entirely, so each channel
+ * multiplies its colour into its own copy of the image — keeping only the light
+ * that colour lets through — and the copies are screened back over the base.
+ * That split-and-recombine is what the shader does to the sun.
+ * ---------------------------------------------------------------------------
+ */
+
+.glitch-image {
+  /* A percentage again: an image's box has no relationship to font-size. */
+  --glitch-split: 0.5%;
+
+  position: relative;
+  display: inline-block;
+  /* Keeps the channel blending inside the component, off whatever sits behind. */
+  isolation: isolate;
+}
+
+.glitch-image__base {
+  display: block;
+  animation: glitch-base var(--glitch-loop) steps(1, end) infinite;
+  animation-delay: var(--glitch-offset);
+}
+
+.glitch-image__channel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  clip-path: inset(100% 0 0 0);
+  mix-blend-mode: screen;
+  animation-duration: var(--glitch-loop);
+  animation-timing-function: steps(1, end);
+  animation-iteration-count: infinite;
+  animation-delay: var(--glitch-offset);
+}
+
+.glitch-image__channel--a {
+  left: calc(var(--glitch-split) * -1);
+  background-color: var(--glitch-a);
+  animation-name: glitch-channel-a;
+}
+
+.glitch-image__channel--b {
+  left: var(--glitch-split);
+  background-color: var(--glitch-b);
+  animation-name: glitch-channel-b;
+}
+
+/*
+ * The multiply is what isolates the channel, against the layer's background as
+ * the colour it is multiplied with. It sits on the image rather than the layer
+ * so that the background stays behind the bitmap instead of washing over it.
+ */
+.glitch-image__channel > .glitch-image__img {
+  mix-blend-mode: multiply;
+  width: 100%;
+}
+
+/* The layers only line up if every copy is laid out the same way. */
+.glitch-image__img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glitch-image__base {
+    animation: none;
+  }
+  .glitch-image__channel {
+    display: none;
+  }
+}

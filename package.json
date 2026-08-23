@@ -1,0 +1,91 @@
+{
+  "name": "@dontbullymeillcode/react-glitch",
+  "version": "0.0.0",
+  "description": "Glitch text effects for React.",
+  "keywords": [
+    "react",
+    "glitch",
+    "text-effect",
+    "animation",
+    "hooks"
+  ],
+  "license": "MIT",
+  "author": "Alexandra Smith <alexandra@dontbullymeillcode.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DontBullyMeIllCode/react-glitch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DontBullyMeIllCode/react-glitch/issues"
+  },
+  "homepage": "https://github.com/DontBullyMeIllCode/react-glitch#readme",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./package.json": "./package.json",
+    "./styles.css": "./dist/index.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.1.0",
+    "class-variance-authority": "^0.7.1",
+    "eslint": "^10.9.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.11.0",
+    "jsdom": "^29.1.1",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.67.0",
+    "vitest": "^4.1.11"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "allowScripts": {
+    "fsevents@2.3.3": true,
+    "esbuild@0.27.2": true
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.6.0"
+  }
+}
