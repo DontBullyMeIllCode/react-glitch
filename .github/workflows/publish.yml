@@ -55,6 +55,18 @@ jobs:
       - run: npm test
       - run: npm run build
 
+      - name: Show the OIDC claims npm will match
+        run: |
+          token=$(curl -sSf -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=npm:registry.npmjs.org" | jq -r .value)
+          TOKEN="$token" node -e '
+            const [, payload] = process.env.TOKEN.split(".")
+            const c = JSON.parse(Buffer.from(payload, "base64url").toString())
+            console.log(JSON.stringify({ sub: c.sub, repository: c.repository,
+              repository_owner: c.repository_owner, workflow_ref: c.workflow_ref,
+              environment: c.environment, ref: c.ref }, null, 2))
+          '
+
       # npm publishes to `latest` whatever the semver says, so a prerelease
       # would otherwise become the version every plain `npm install` gets.
       - name: Publish to npm
