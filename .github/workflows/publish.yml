@@ -20,9 +20,13 @@ jobs:
       name: npm
       url: https://www.npmjs.com/package/@dontbullymeillcode/react-glitch
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-node@v4
+      # v7 or newer is required, not just preferred: earlier versions export a
+      # dummy NODE_AUTH_TOKEN of "XXXXX-XXXXX-XXXXX-XXXXX" when no token is
+      # given, which lands a non-functional token in .npmrc and breaks the OIDC
+      # publish below with a 403. See actions/setup-node#1558.
+      - uses: actions/setup-node@v7
         with:
           # Matches CI, so what ships is what was tested.
           node-version: 22
