@@ -1,6 +1,6 @@
 ![don't bully me i'll code](https://raw.githubusercontent.com/DontBullyMeIllCode/react-glitch/main/assets/dbmic-banner-full-logo.png)
 
-# react-glitch
+# React Glitch
 
 CSS-driven glitch effects for React. Text tears on a fixed burst schedule — no
 randomness, no animation loop in JavaScript, no runtime cost beyond the styles.
