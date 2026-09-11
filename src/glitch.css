@@ -1,11 +1,13 @@
 /*
- * Shared defaults for every variant. These have to live somewhere both of them
+ * Shared defaults for every variant. These have to live somewhere all of them
  * see: a variant that sets only its own overrides would leave var(--glitch-loop)
  * undefined, which invalidates the whole `animation` shorthand and silently
- * drops the effect rather than erroring.
+ * drops the effect rather than erroring. Adding a variant means adding it here
+ * — `glitch-css.test.ts` fails if one is missed.
  */
 .glitch-text,
-.glitch-icon {
+.glitch-icon,
+.glitch-image {
   --glitch-loop: 5.2s;
   /* Furthest a torn slice slides sideways (shader: 0.06 UV). */
   --glitch-amount: 6%;

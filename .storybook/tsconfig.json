@@ -1,0 +1,13 @@
+{
+  /*
+   * The root config is the library's: `src` only, so that `rootDir` keeps the
+   * declaration output flat. These two files sit outside it and would still be
+   * a way for CI to go green on a broken Storybook, so they get checked here.
+   */
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "..",
+    "noEmit": true
+  },
+  "include": ["./*.ts", "./*.tsx"]
+}

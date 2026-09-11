@@ -3,6 +3,10 @@
 CSS-driven glitch effects for React. Text tears on a fixed burst schedule — no
 randomness, no animation loop in JavaScript, no runtime cost beyond the styles.
 
+<img src="https://raw.githubusercontent.com/DontBullyMeIllCode/react-glitch/main/previews/glitch-text.gif" width="460" alt="The words SIGNAL LOST tearing into cyan and magenta slices, four times over five seconds">
+
+**[Turn the knobs in Storybook →](https://dontbullymeillcode.github.io/react-glitch/)**
+
 ## Install
 
 ```sh
@@ -76,6 +80,8 @@ channel layers instead, which is safe precisely because the content is static:
 <GlitchIcon className="size-6" split="1.2%"><TriangleAlert /></GlitchIcon>
 ```
 
+<img src="https://raw.githubusercontent.com/DontBullyMeIllCode/react-glitch/main/previews/glitch-icon.gif" width="160" alt="A warning triangle icon tearing into cyan and magenta slices">
+
 Takes `children`, `className`, and every knob from the table above except
 `channels`. The duplicated layers are `aria-hidden`, so the content is
 announced once.
@@ -105,6 +111,8 @@ import Image from 'next/image'
 `as` defaults to `"img"`. Whatever you pass has its own props type-checked and
 forwarded to every layer, so a missing `width` on `next/image` is still a
 compile error.
+
+<img src="https://raw.githubusercontent.com/DontBullyMeIllCode/react-glitch/main/previews/glitch-image.gif" width="400" alt="A sunset image tearing into colour-separated slices">
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -161,6 +169,40 @@ npm run typecheck # tsc --noEmit
 npm run lint      # eslint
 npm run build     # tsup -> dist/ (ESM + CJS + types + CSS)
 ```
+
+### Storybook
+
+Every knob in the tables above is a live control, and the three variants are
+easiest to tell apart side by side:
+
+```sh
+npm run storybook       # dev server on :6006
+npm run build-storybook # static build -> storybook-static/
+```
+
+Stories sit beside the components as `src/*.stories.tsx`, so `npm run
+typecheck` and `npm run lint` cover them; `src/index.ts` never reaches them, so
+they stay out of `dist`. Pushing to `main` publishes them to [GitHub Pages](https://dontbullymeillcode.github.io/react-glitch/).
+
+Note that the effect is disabled under `prefers-reduced-motion: reduce` — if a
+story looks static, check that setting before the build.
+
+### Previews
+
+```sh
+npm run previews  # previews/*.gif, from the built components
+```
+
+The README's GIFs are generated rather than recorded. Because the effect is a
+step function over a fixed schedule, the whole loop has only as many distinct
+states as `glitch.css` has keyframe offsets — the script reads those offsets
+out of the stylesheet, pins each animation to that exact instant in headless
+Chrome, and gives every GIF frame a delay equal to the gap until the next one.
+Twenty-two states become fifteen held frames and an exactly 5200ms loop, so
+retiming the effect retimes the previews.
+
+Needs Chrome; set `CHROME_PATH` if it is not in the default macOS location.
+`previews/` is outside the `files` list, so none of it reaches the tarball.
 
 ## License
 

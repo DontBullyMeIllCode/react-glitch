@@ -8,3 +8,6 @@ coverage/
 npm-debug.log*
 yarn-error.log*
 *.tgz
+
+# Storybook
+storybook-static/

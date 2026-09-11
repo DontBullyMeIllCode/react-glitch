@@ -1,0 +1,70 @@
+import { Meta } from "@storybook/addon-docs/blocks"
+
+<Meta title="Introduction" />
+
+# react-glitch
+
+CSS-driven glitch effects for React. Text tears on a fixed burst schedule — no
+randomness, no animation loop in JavaScript, no runtime cost beyond the styles.
+
+## What is in here
+
+- **[GlitchText](?path=/docs/components-glitchtext--docs)** — the text variant.
+  Its channels are `::before` and `::after` reading `attr(data-text)`, so a
+  plain string is copied straight in and anything live is mirrored from the DOM.
+- **[GlitchIcon](?path=/docs/components-glitchicon--docs)** — for static markup
+  an SVG has no text to copy, so the children are cloned into real layers.
+- **[GlitchImage](?path=/docs/components-glitchimage--docs)** — for bitmaps,
+  which ignore `color`; each channel multiplies its colour out of its own copy
+  and the copies are screened back over the base.
+- **[useGlitch](?path=/docs/hooks-useglitch--docs)** — the wiring behind
+  `GlitchText`, for building a variant of your own.
+
+## Reading these stories
+
+Every knob is a raw CSS value rather than a number, so each control is a text
+field. Leaving one **empty** is not the same as typing its default: the variable
+goes unset and the stylesheet's own default applies, which is how `GlitchIcon`
+and `GlitchImage` get a percentage `--glitch-split` where `GlitchText` gets an
+`em`.
+
+The **Surface** control in the toolbar switches the backdrop. The effect is
+built for a dark scene — the channels read as light leaking out of the tear —
+but the image variant's screen blending is worth seeing against white too.
+
+## If nothing is moving
+
+`glitch.css` disables the animation under `prefers-reduced-motion: reduce`.
+Flashing imagery is exactly what this is, so the OS-level opt-out is honoured;
+if the stories look static, check that setting before the build.
+
+## Using it
+
+```sh
+npm install @dontbullymeillcode/react-glitch
+```
+
+Import the stylesheet once, near your app entry — these stories get it from the
+components' own `import "./glitch.css"`, but the published package ships it
+separately so it can be loaded on your terms:
+
+```ts
+import '@dontbullymeillcode/react-glitch/styles.css'
+```
+
+```tsx
+import { GlitchText, GlitchIcon } from '@dontbullymeillcode/react-glitch'
+import { TriangleAlert } from 'lucide-react'
+
+export function Title() {
+  return (
+    <h1>
+      <GlitchIcon><TriangleAlert /></GlitchIcon>
+      <GlitchText amount="8%">SIGNAL LOST</GlitchText>
+    </h1>
+  )
+}
+```
+
+Both variants share the same knobs and the same burst schedule. Give them
+different `offset` values so they do not tear in unison.
