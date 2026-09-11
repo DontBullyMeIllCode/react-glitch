@@ -1,0 +1,57 @@
+name: Publish
+
+# Publishing is triggered by a GitHub Release rather than a push, so cutting a
+# version is a deliberate act with a changelog attached. The tag is the source
+# of truth and is checked against package.json before anything leaves the runner.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  # Mints the OIDC token npm exchanges for short-lived publish rights. Without
+  # it the publish step falls back to looking for a token and fails.
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: npm
+      url: https://www.npmjs.com/package/@dontbullymeillcode/react-glitch
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          # Matches CI, so what ships is what was tested.
+          node-version: 22
+          cache: npm
+          registry-url: https://registry.npmjs.org
+
+      # Node 22 bundles npm 10, and trusted publishing needs 11.5.1 or newer.
+      # Without this the publish fails on an unrecognised auth flow.
+      - name: Use an npm that can publish with OIDC
+        run: npm install -g npm@latest
+
+      - run: npm ci
+
+      - name: Check the tag matches package.json
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          version="$(node -p "require('./package.json').version")"
+          if [ "$tag" != "$version" ]; then
+            echo "::error::Release tag ${GITHUB_REF_NAME} does not match package.json version ${version}"
+            exit 1
+          fi
+          echo "Publishing ${version}"
+
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+      # npm publishes to `latest` whatever the semver says, so a prerelease
+      # would otherwise become the version every plain `npm install` gets.
+      - name: Publish to npm
+        run: npm publish --tag ${{ github.event.release.prerelease && 'next' || 'latest' }}

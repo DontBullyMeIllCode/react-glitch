@@ -1,3 +1,5 @@
+![don't bully me i'll code](https://raw.githubusercontent.com/DontBullyMeIllCode/react-glitch/main/assets/dbmic-banner-full-logo.png)
+
 # react-glitch
 
 CSS-driven glitch effects for React. Text tears on a fixed burst schedule — no
@@ -186,6 +188,27 @@ they stay out of `dist`. Pushing to `main` publishes them to [GitHub Pages](http
 
 Note that the effect is disabled under `prefers-reduced-motion: reduce` — if a
 story looks static, check that setting before the build.
+
+### Releasing
+
+Publishing is triggered by a GitHub Release, not by a push. Bump the version,
+commit it, then create a release whose tag matches — `v1.2.3` for `1.2.3`. The
+workflow refuses to publish if the two disagree, reruns the full CI suite, and
+publishes with provenance via npm's trusted publishing, so no token is stored
+in the repository. A release marked as a prerelease publishes under the `next`
+dist-tag rather than `latest`.
+
+The very first publish has to be done by hand, because a trusted publisher can
+only be configured on a package that already exists:
+
+```sh
+npm login
+npm publish   # prepublishOnly runs typecheck, test and build first
+```
+
+Then on npmjs.com, under the package's Settings → Trusted publishing, add this
+repository with workflow `publish.yml`. Every release after that publishes
+itself.
 
 ### Previews
 
