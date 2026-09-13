@@ -194,21 +194,45 @@ story looks static, check that setting before the build.
 Publishing is triggered by a GitHub Release, not by a push. Bump the version,
 commit it, then create a release whose tag matches — `v1.2.3` for `1.2.3`. The
 workflow refuses to publish if the two disagree, reruns the full CI suite, and
-publishes with provenance via npm's trusted publishing, so no token is stored
-in the repository. A release marked as a prerelease publishes under the `next`
-dist-tag rather than `latest`.
+publishes with provenance. A release marked as a prerelease publishes under the
+`next` dist-tag rather than `latest`.
 
-The very first publish has to be done by hand, because a trusted publisher can
-only be configured on a package that already exists:
+No npm token is stored anywhere. The workflow authenticates with npm's trusted
+publishing: GitHub mints a short-lived OIDC token, npm checks its claims against
+a trust relationship recorded on the package, and provenance is attested
+automatically. Configuring that relationship is a one-time job, and it needs an
+interactive 2FA challenge, so it has to be done from a logged-in terminal or the
+website rather than from CI:
 
 ```sh
 npm login
-npm publish   # prepublishOnly runs typecheck, test and build first
+npm trust github @dontbullymeillcode/react-glitch \
+  --repo DontBullyMeIllCode/react-glitch \
+  --file publish.yml \
+  --env npm \
+  --allow-publish
+
+npm trust list @dontbullymeillcode/react-glitch   # confirm it saved
 ```
 
-Then on npmjs.com, under the package's Settings → Trusted publishing, add this
-repository with workflow `publish.yml`. Every release after that publishes
-itself.
+Every one of those has to match the workflow exactly, and they are
+case-sensitive. `--env npm` corresponds to the job's `environment:` block —
+change one and you must change the other. `--allow-publish` is the flag that
+matters most: a relationship without it is trusted but not permitted to publish,
+which fails as `OIDC permission denied for this action` rather than as anything
+that names the real cause. Add `--allow-stage-publish` as well to also allow
+`npm stage publish`, where a version waits in npm's staging area until a
+maintainer approves it with 2FA.
+
+To run the pipeline without cutting a release, trigger the workflow by hand from
+the Actions tab. It defaults to a dry run, so it will do everything except the
+publish itself.
+
+Publishing from a laptop works too, and the same checks run first:
+
+```sh
+npm publish   # prepublishOnly runs typecheck, test and build
+```
 
 ### Previews
 
