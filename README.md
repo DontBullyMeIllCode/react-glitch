@@ -215,6 +215,11 @@ npm trust github @dontbullymeillcode/react-glitch \
 npm trust list @dontbullymeillcode/react-glitch   # confirm it saved
 ```
 
+That last command should report `permissions: publish, stage publish`. The
+labels are what to read it by: `publish` is `npm publish`, `stage publish` is
+`npm stage publish`, and they are comma-separated, so a lone `stage publish`
+means direct publishing is *not* granted.
+
 Every one of those has to match the workflow exactly, and they are
 case-sensitive. `--env npm` corresponds to the job's `environment:` block —
 change one and you must change the other. `--allow-publish` is the flag that
