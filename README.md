@@ -1,4 +1,4 @@
-![don't bully me i'll code](https://raw.githubusercontent.com/DontBullyMeIllCode/react-glitch/main/assets/dbmic-banner-full-logo.png)
+![don't bully me i'll code](https://raw.githubusercontent.com/DontBullyMeIllCode/dbmic-assets/main/images/dbmic-banner-full-logo.png)
 
 # React Glitch
 
